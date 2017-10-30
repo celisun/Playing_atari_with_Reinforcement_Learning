@@ -8,23 +8,31 @@ class net(nn.Module):
         
     """
     
-    def __init__ (self, input_dim, output_dim, hidden_dim, hidden_n=5):
+    def __init__ (self, input_dim, output_dim, hidden_dim):
         super(net, self).__init__()
         self.input_layer = nn.Linear(input_dim, hidden_dim)
-        self.hidden_layer = nn.Linear(hidden_dim, hidden_dim)
-        self.output_layer = nn.Linear(hidden_dim, output_dim)
+        self.hidden_layer_1 = nn.Linear(hidden_dim, hidden_dim)
+        self.hidden_layer_2 = nn.Linear(hidden_dim, hidden_dim)
+        self.hidden_layer_3 = nn.Linear(hidden_dim, hidden_dim)
+        self.hidden_layer_4 = nn.Linear(hidden_dim, hidden_dim)
+        self.hidden_layer_5 = nn.Linear(hidden_dim, hidden_dim)
         
-        self.hidden_n = hidden_n
+        self.output_layer = nn.Linear(hidden_dim, output_dim)
         self.input_dim = input_dim
                    
         
     def forward(self, x):
-        assert x.data.size()[1]* x.data.size()[2]* x.data.size()[3] == self.input_dim
-        x = x.view(-1, self.input_dim)
+        print str(x.data.size())
+        x = self.input_layer(x)
+        print str(x.data.size())
+        x = F.relu(x)
         
-        x = F.relu(self.input_layer(x))
-        for i in range(self.hidden_n):
-            x = F.relu(self.hidden_layer(x))
+        x = F.relu(self.hidden_layer_1(x))
+        x = F.relu(self.hidden_layer_2(x))
+        x = F.relu(self.hidden_layer_3(x))
+        x = F.relu(self.hidden_layer_4(x))
+        x = F.relu(self.hidden_layer_5(x))
+        
         x = F.relu(self.output_layer(x))
         
         return x
