@@ -32,3 +32,7 @@ class DQN(nn.Module):
         x = F.relu(self.bn3(self.conv3(x)))
         return self.linear(x.view(x.size(0), -1))
 
+    
+    
+    
+    
