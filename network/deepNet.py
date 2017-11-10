@@ -17,21 +17,24 @@ class Net(nn.Module):
         self.hidden_layer_4 = nn.Linear(hidden_dim, hidden_dim)
         self.hidden_layer_5 = nn.Linear(hidden_dim, hidden_dim)     
         self.output_layer = nn.Linear(hidden_dim, output_dim)
+        self.tanh = nn.Tanh()
 
                    
         
     def forward(self, x):
         #print str(x.data.size())
         x = self.input_layer(x)
-        x = F.relu(x)
+        x = self.tanh(x)
         
-        x = F.relu(self.hidden_layer_1(x))
-        x = F.relu(self.hidden_layer_2(x))
-        x = F.relu(self.hidden_layer_3(x))
-        x = F.relu(self.hidden_layer_4(x))
-        x = F.relu(self.hidden_layer_5(x))
+        x = self.tanh(self.hidden_layer_1(x))
+        x = self.tanh(self.hidden_layer_2(x))
+        x = self.tanh(self.hidden_layer_3(x))
+        x = self.tanh(self.hidden_layer_4(x))
+        x = self.tanh(self.hidden_layer_5(x))
         
-        x = F.relu(self.output_layer(x))
+        x = self.output_layer(x)
+        #x = self.Tanh(x)
+        #x = self.softmax(x)
         
         return x
         
