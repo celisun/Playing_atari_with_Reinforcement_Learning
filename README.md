@@ -1,4 +1,4 @@
-# DeepQLearning
+# Deep Q Learning
 
 Best learning so far. 
 
