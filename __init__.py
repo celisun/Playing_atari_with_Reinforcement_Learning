@@ -1,1 +1,2 @@
-from network import *
+from Network import *
+from Agents import *
