@@ -1,7 +1,7 @@
 # Playing Atari with Reinforcemen Learning
 
 
-<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/results_table.png width="400">
+<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/results_table.png width="450">
 
 Comparing different learning algorithms on training game LunarLanderv.2.0.
 
