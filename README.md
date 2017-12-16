@@ -3,7 +3,7 @@
 
 <img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/results_table.png width="450">
 
-Comparing different learning algorithms on training game LunarLanderv.2.0.
+Comparing the average/total scores obtained per episode using different learning algorithms on game LunarLanderv.2.0.
 
 
 
