@@ -5,7 +5,6 @@
 
 Comparing different learning algorithms on training game LunarLanderv.2.0.
 
-<video src="lunarlander.playvideo.mov" width="320" height="200" controls preload></video>
 
 
 ### Random 
