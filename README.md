@@ -10,10 +10,6 @@ Lunar Lander game 'LunarLander-v2'
 
 <img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/rLunarLanderv.2.0.png width="450">
 
-about openAI gym https://github.com/openai/gym
-
-about this game and leaderboard https://github.com/openai/gym/wiki/Leaderboard
-
 
 ## Random 
 random agent: average r = -2.5, duration = 80 steps/episode:
