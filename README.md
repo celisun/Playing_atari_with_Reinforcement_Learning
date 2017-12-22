@@ -1,13 +1,13 @@
 # Playing Atari with Reinforcemen Learning
 
-<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/rLunarLanderv.2.0.png width="450">
 
-Comparing the average/total scores obtained per episode using different learning algorithms on game LunarLanderv.2.0.
+
+Table comparing the average/total scores obtained per episode using different learning algorithms on game LunarLanderv.2.0.
 
 <img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/results_table.png width="450">
 
 
-
+<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/rLunarLanderv.2.0.png width="450">
 
 
 
