@@ -27,3 +27,12 @@ watch the game play video at https://www.youtube.com/watch?v=D5ymUS7umPQ&t=2s
 #### Actor-Critic agent (with experience reply):
 
 <img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/results-AC-replay.png width="550">
+
+
+## Dependencies
+
+* python2
+* pytorch
+* numpy
+* matplotlib
+
