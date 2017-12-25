@@ -37,16 +37,15 @@ Tensor = FloatTensor
 config = config
 config_net = config_net
 
-
 # named tuple representing a single transition in enviornment
 Transition = namedtuple('Transition',
                         ('state', 'action', 'reward', 'next_state'))
 
 
+
+
 class QLearningAgent(object):
-    """
-    Agent implementing Deep Q-learning with experience replay
-    """
+    """Agent implementing Deep Q-learning with experience replay """
 
     def __init__(self, observation_space, action_space, learnable=None, lr_scheduler= None, replay_memory_capacity=None):
         self.observation_space = observation_space
@@ -77,8 +76,7 @@ class QLearningAgent(object):
             self.optimizer = optim.Adam(self.q.parameters(), lr=config["learning_rate"], \
                                         betas=(0.001, 0.9), weight_decay=0.0001)
             if lr_scheduler:
-                    self.optimizer = lr_scheduler(self.optimizer, self.epoch_done + 1)
-                    
+                    self.optimizer = lr_scheduler(self.optimizer, self.epoch_done + 1)       
         else:
             self.q = None
             
@@ -95,8 +93,7 @@ class QLearningAgent(object):
                 observation[DoubleTensor]: 
             Return: 
                 action[int64] : action picked
-                value[float]: estimated Q value of corresponding action picked
-        """
+                value[float]: estimated Q value of corresponding action picked """
         
         if eps is None:
             eps= config["EPS_END"] + (config["EPS_START"]-config["EPS_END"]) * \
@@ -120,28 +117,28 @@ class QLearningAgent(object):
         qvalue = qvalue.numpy()[0][0]
         return action, qvalue            
        
+        
     def train(self, env):
         self.epoch_done=0
         t_num=0
         for i in range(config["n_itr"]): 
             print('')
-            print(' =============================> Epoch ' + str(self.epoch_done))
+            print(' =======================================> Epoch ' + str(self.epoch_done))
 
             obs = env.reset()
             obs = self.obFixer(self.observation_space, obs)
             qvalue_total=0.
             loss_total=0.
             loss_data_=0.
-            reward_total=0.     # for lunar land
+            reward_total=0.     
             
             for t in count():
                 print(' episode: ' + str(t+1))
                 # Select and perform action
-                action, qvalue = self.act_random() if self.q is None \
-                                    else self.act_learn(torch.from_numpy(obs))
+                action, qvalue = self.act_random() if self.q is None else self.act_learn(torch.from_numpy(obs))
                 obs2, reward, done, info = env.step(action)
-                obs2 = self.obFixer(self.observation_space, obs2)
                 
+                obs2 = self.obFixer(self.observation_space, obs2)
                 # convert reward to -1, 0 or 1
                 if done: 
                     obs2 = None  
@@ -151,7 +148,7 @@ class QLearningAgent(object):
                 elif reward<0:
                     _reward_ = -1
 
-                ## I'm guaranteeing half of good transitions(r>0) in memory  
+                # I'm guaranteeing half of good transitions(r>0) in memory  
                 if (t_num%2==0 and reward >0) or (t_num%2!=0 and reward<0):
                     self.replay_memory.save(obs, action, _reward_, obs2)
                     t_num += 1
@@ -166,7 +163,6 @@ class QLearningAgent(object):
                 obs = obs2 
                 
                 env.render()
-
                 if done:
                     print 'Good Land!' if reward > 0 else 'Crash!'
                     self.average_total_reward.append(reward_total/(t+1))
@@ -181,19 +177,20 @@ class QLearningAgent(object):
         env.render(close=True)
         env.close()
 
+        
     def optimize_model(self):
         BATCH_SIZE = config["BATCH_SIZE"]
         ACTION_LIST = config["action_list_n"]
         INPUT_SIZE = config_net["inputs_dim"]
+        
         if len(self.replay_memory) < BATCH_SIZE:
             return 0.0
 
         print ('sample batch from memory...\n')
         transitions = self.replay_memory.sample(BATCH_SIZE)
 
-        batch = Transition(*zip(*transitions))
-            
-        # Construct variable to train for state, action , reward 
+        # Construct variable for pytorch for variables: state, action, reward 
+        batch = Transition(*zip(*transitions))  
         state_batch = Variable(torch.from_numpy(np.asarray(batch.state))).float()    ##.double()
         action_batch = Variable(torch.from_numpy(np.asarray(batch.action))).float() ##.double()
         reward_batch = Variable(torch.from_numpy(np.asarray(batch.reward))).float()  ##.double()
@@ -206,19 +203,21 @@ class QLearningAgent(object):
         # Select the columns in Q for actions taken  
         state_action_values = state_values_[0].view(1,ACTION_LIST).index_select(1, action_batch[0].long())
         for i in range(len(action_batch)-1):
-            state_action_values = torch.cat((state_action_values, state_values_[i+1].view(1,ACTION_LIST).index_select(1, action_batch[i+1].long())),0)
+            state_action_values = torch.cat((state_action_values, state_values_[i+1].view(1,ACTION_LIST\ 
+                                             ).index_select(1, action_batch[i+1].long())),0)
         
         state_action_values = state_action_values.index_select(1, Variable(torch.LongTensor([0])))
      
-        # Create mask for non-final next_states   
+        # Create mask for non-final next_states, 
+        # final transitions should have zero V_next   
         non_final_mask = ByteTensor(tuple(map(lambda s: s is not None, batch.next_state)))
-        non_final_next_states = Variable (torch.cat([torch.from_numpy(x) for x in np.asarray(batch.state) if x is not None]), volatile=True).float()        ##.double()
+        non_final_next_states = Variable (torch.cat([torch.from_numpy(x) \ 
+                       for x in np.asarray(batch.state) if x is not None]), volatile=True).float()        ##.double()
            
         # Predict next state value V(s_{t+1})  
         # then select the maxQ : argmax{a}: Q(s_{t+1}, a)
         next_state_values = Variable(torch.zeros(BATCH_SIZE).type(Tensor)).float()       ##.double()
-        next_state_values[non_final_mask], _ = torch.max( self.q( \
-            non_final_next_states if self.learnable=='CNN' \
+        next_state_values[non_final_mask], _ = torch.max( self.q( non_final_next_states if self.learnable=='CNN' \
                     else non_final_next_states.view(-1,INPUT_SIZE)), 1)   
         
         # Compute the expected Q values
@@ -246,8 +245,7 @@ class QLearningAgent(object):
         q_t = self.average_total_Q
         loss_ = self.average_loss
         eps_ = self.eps_decay
-
-        #ax1.plot([x*y for x, y in zip(reward_t, epoch_durations)])
+    
         ax1.plot(reward_t)
         ax2.plot(q_t)
         ax3.plot(loss_)
@@ -276,8 +274,7 @@ class QLearningAgent(object):
                 obsercation_space[nparray]
                 observation
             Return:
-                newObservation[nparray]
-        """
+                newObservation[nparray]  """
         newObservation = []
 
         if observation_space.__class__ == gym.spaces.box.Box:
@@ -286,7 +283,6 @@ class QLearningAgent(object):
                 low = observation_space.low[space]
                 if high == np.finfo(np.float32).max or high == float('Inf'):    #tanh to scale for inf
                     newObservation.append(math.tanh(observation[space]))
-
                 else:                         # current value percentage% to the range high-low
                     dif = high - low 
                     percent = (observation[space]+abs(low))/dif
