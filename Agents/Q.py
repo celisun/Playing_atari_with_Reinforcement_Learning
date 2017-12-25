@@ -20,7 +20,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 
 from config import config, config_net
-from MemoryBuffer import ReplayMemory
+from Memory.MemoryBuffer import ReplayMemory
 from network.CNN import CNN
 from network.deepnet import Net
 
