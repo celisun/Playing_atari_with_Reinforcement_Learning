@@ -7,6 +7,4 @@ configC = {
     "learning_rate": 0.00025,#0.01,
     "weight_decay": 0.0001,
     "betas": (0.001, 0.9)
-    
-    
 }
