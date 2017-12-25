@@ -3,19 +3,14 @@ import torch.nn.functional as F
 
 
 class DQN(nn.Module):
-    """
-        Convolutoin net with three X {conv -> bn -> relu}
-        followed by a final fully connected to generate the output.
-        
+    """  Convolutoin net with three X {conv -> bn -> relu} followed by a final fully connected to generate the output.
         Args:       
             dim1, dim2: the height and width of the frame/state input
-            output_size: the number of actions in action space
-            
+            output_size: the number of actions in action space        
         Return: 
             the estimated Q values of for each action
     """
-    
-    
+
     def __init__(self, dim1, dim2, output_size, kernel_size=5, stride=2):      #RGB input size dim1 dim2
         super(DQN, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, kernel_size=kernel_size, stride=stride)
