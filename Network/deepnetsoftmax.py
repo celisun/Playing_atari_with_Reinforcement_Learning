@@ -20,8 +20,8 @@ class Netsoftmax(nn.Module):
         
    
     def forward(self, x):
-
         x = self.tanh(self.input_layer(x))
+        
         x = self.tanh(self.hidden_layer_1(x))
         x = self.tanh(self.hidden_layer_2(x))
         x = self.tanh(self.hidden_layer_3(x))
