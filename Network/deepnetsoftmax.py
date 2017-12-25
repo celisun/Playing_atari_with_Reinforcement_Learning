@@ -4,9 +4,7 @@ import torch.nn.functional as F
 class Netsoftmax(nn.Module):
     """
         Simple multiple layer net, with 5 hidden layers
-        each equipped with a rectified non-linearity.
-        
-    """
+        each equipped with a rectified non-linearity. """
     
     def __init__ (self, input_dim, output_dim, hidden_dim):
         super(Netsoftmax, self).__init__()
@@ -24,20 +22,14 @@ class Netsoftmax(nn.Module):
     def forward(self, x):
 
         x = self.tanh(self.input_layer(x))
-     
         x = self.tanh(self.hidden_layer_1(x))
- 
         x = self.tanh(self.hidden_layer_2(x))
-
         x = self.tanh(self.hidden_layer_3(x))
-
         x = self.tanh(self.hidden_layer_4(x))
-
         x = self.tanh(self.hidden_layer_5(x))
-
+        
         x = self.output_layer(x)
         x = self.softmax(x)
- 
-        
+    
         return x
         
