@@ -118,7 +118,7 @@ class QLearningAgent(object):
             action, _= self.act_random()
         
         qvalue = qvalue.numpy()[0][0]
-        return action, qvalue           # always return MAX Q possible in current prediction 11/9
+        return action, qvalue            
        
     def train(self, env):
         self.epoch_done=0
@@ -188,13 +188,12 @@ class QLearningAgent(object):
         if len(self.replay_memory) < BATCH_SIZE:
             return 0.0
 
+        print ('sample batch from memory...\n')
         transitions = self.replay_memory.sample(BATCH_SIZE)
 
         batch = Transition(*zip(*transitions))
-        print ('sample batch from memory...\n')
-           
-        # Concatenate the batch elements of each
-        # state, action , reward in every transition
+            
+        # Construct variable to train for state, action , reward 
         state_batch = Variable(torch.from_numpy(np.asarray(batch.state))).float()    ##.double()
         action_batch = Variable(torch.from_numpy(np.asarray(batch.action))).float() ##.double()
         reward_batch = Variable(torch.from_numpy(np.asarray(batch.reward))).float()  ##.double()
@@ -207,18 +206,16 @@ class QLearningAgent(object):
         # Select the columns in Q for actions taken  
         state_action_values = state_values_[0].view(1,ACTION_LIST).index_select(1, action_batch[0].long())
         for i in range(len(action_batch)-1):
-            state_action_values = torch.cat((state_action_values, \
-                                    state_values_[i+1].view(1,ACTION_LIST).index_select(1, action_batch[i+1].long())),0)
+            state_action_values = torch.cat((state_action_values, state_values_[i+1].view(1,ACTION_LIST).index_select(1, action_batch[i+1].long())),0)
+        
         state_action_values = state_action_values.index_select(1, Variable(torch.LongTensor([0])))
      
+        # Create mask for non-final next_states   
         non_final_mask = ByteTensor(tuple(map(lambda s: s is not None, batch.next_state)))
-        # We don't want backprop expected action values, volatile shuts down requires-grad
-        non_final_next_states = Variable (torch.cat([torch.from_numpy(x) \
-                                                     for x in np.asarray(batch.state) \
-                                           if x is not None]), volatile=True).float()        ##.double()
+        non_final_next_states = Variable (torch.cat([torch.from_numpy(x) for x in np.asarray(batch.state) if x is not None]), volatile=True).float()        ##.double()
            
-        # Compute state value V(s_{t+1}) by model  
-        # then select the maxQ value of each: MAX(a)Q(s_{t+1}, a)
+        # Predict next state value V(s_{t+1})  
+        # then select the maxQ : argmax{a}: Q(s_{t+1}, a)
         next_state_values = Variable(torch.zeros(BATCH_SIZE).type(Tensor)).float()       ##.double()
         next_state_values[non_final_mask], _ = torch.max( self.q( \
             non_final_next_states if self.learnable=='CNN' \
@@ -227,7 +224,7 @@ class QLearningAgent(object):
         # Compute the expected Q values
         expected_state_action_values =  reward_batch + (next_state_values * config["GAMMA"])       # Q_{t+1}(s,a) = r + gamma * MAX(a')Q(s', a')
 
-        # Compute Mean-Square Error loss from Q and expected Q*
+        # Compute Mean-Square Error loss of predicted and current Q values 
         loss = self.loss(state_action_values, expected_state_action_values)   # loss(x, y) = 1/n sum|x-y|^2
         
         # Update model 
@@ -236,6 +233,7 @@ class QLearningAgent(object):
         
         return loss.data.numpy()[0]
    
+  
     def plot_durations():
         fig = plt.figure(figsize=(14,14))
         plt.clf()
