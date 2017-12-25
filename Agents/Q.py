@@ -203,8 +203,7 @@ class QLearningAgent(object):
         # Select the columns in Q for actions taken  
         state_action_values = state_values_[0].view(1,ACTION_LIST).index_select(1, action_batch[0].long())
         for i in range(len(action_batch)-1):
-            state_action_values = torch.cat((state_action_values, state_values_[i+1].view(1,ACTION_LIST\ 
-                                             ).index_select(1, action_batch[i+1].long())),0)
+            state_action_values = torch.cat((state_action_values, state_values_[i+1].view(1, ACTION_LIST).index_select(1, action_batch[i+1].long())),0)
         
         state_action_values = state_action_values.index_select(1, Variable(torch.LongTensor([0])))
      
