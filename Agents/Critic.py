@@ -9,7 +9,6 @@ from torch.autograd import Variable
 
 from Network.CNN import CNN
 from Network.deepnet import Net
-
 from config import configC
 
 
@@ -31,10 +30,9 @@ class Critic(object):
         
         # Construct Vriable for pytorch
         s  = Variable(torch.from_numpy(np.asarray(s))).float()                      # shape=(N, 8)
-        s_ = Variable(torch.from_numpy(np.asarray(s_)), volatile=True).float()               # shape=(N, 8)
+        s_ = Variable(torch.from_numpy(np.asarray(s_)), volatile=True).float()                           # shape=(N, 8)
            
         self.optimizer.zero_grad()
-    
         # Model estimate state values
         state_values = self.q(s)                 #  shape=(N, 1)
     
@@ -47,8 +45,8 @@ class Critic(object):
                             r[i][0]) for i in range(r.shape[0])],0).view(s.size()[0], 1)     
         
         # Copmute TD error and loss
-        td_error = expected_state_values.sub(state_values)                # shape=(N, 1)
-        loss = torch.mean((expected_state_values.sub(state_values))**2)                  #  shape=(1, )
+        td_error = expected_state_values.sub(state_values)                        # shape=(N, 1)
+        loss = torch.mean((expected_state_values.sub(state_values))**2)           # shape=(1,  )
 
         # Update model
         loss.backward()
@@ -61,5 +59,6 @@ class Critic(object):
         return td_error    
     
     def plot():
+    # plot _loss_
         return
            
