@@ -22,10 +22,9 @@ random agent: average r = -2.5, duration = 80 steps/episode:
 ## Learned
 #### Deep Q agent:
 watch the game play video at https://www.youtube.com/watch?v=D5ymUS7umPQ&t=2s
-<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/rl.gif width="350">
-
 
 <img src="https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_DeepQLearning/master/results-Q.png" width="550">
+<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/rl.gif width="350">
 
 #### Actor-Critic agent (with experience reply):
 
