@@ -38,8 +38,7 @@ config = config
 config_net = config_net
 
 # named tuple representing a single transition in enviornment
-Transition = namedtuple('Transition',
-                        ('state', 'action', 'reward', 'next_state'))
+Transition = namedtuple('Transition', ('state', 'action', 'reward', 'next_state'))
 
 
 
@@ -80,11 +79,11 @@ class QLearningAgent(object):
         else:
             self.q = None
             
-        
-        
+  
     def act_random(self):
         action = self.action_space.sample()
         return action, 0    
+      
       
     def act_learn(self, observation, eps=None):
         """
