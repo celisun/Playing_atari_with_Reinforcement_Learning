@@ -36,7 +36,7 @@ watch the game play video at https://www.youtube.com/watch?v=D5ymUS7umPQ&t=2s
 
 ## Dependencies
 
-* python2
+* python
 * pytorch
 * numpy
 * matplotlib
