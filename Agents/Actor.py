@@ -38,8 +38,6 @@ from config import ConfigA
     
     def choose_action(self, observation):
     ## Choose a from s
-    ## 这个行为不再是用 Q value 来选定的, 而是用概率来选定. 概率即预测概率
-    ## 即使不用 epsilon-greedy, 也具有一定的随机性 
     ## Return the action picked  
         observation = Variable(torch.from_numpy(observation), \
                            volatile=True).float().view(1, configA["inputs_dim"])
@@ -56,10 +54,6 @@ from config import ConfigA
     
   
     def learn(self, s, a, td):
-    # Actor 想要最大化期望的 reward, 在 Actor Critic 算法中, 
-    # 我们用 “比平时好多少” (TD error) 来当做 reward
-    # s, a 用于产生 Gradient ascent 的方向,
-    # td 来自 Critic, 用于告诉 Actor 这方向对不对.
         if len(s.shape)==1: 
             s, a = s[np.newaxis, :], np.array([[a]])    # (N, x)
           
