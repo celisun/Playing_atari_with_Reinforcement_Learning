@@ -4,7 +4,7 @@ import torch.nn.functional as F
 class Net(nn.Module):
     """
         Simple multiple layer net, with 5 hidden layers
-        each equipped with a rectified non-linearity.   """
+        each equipped with a tanh.   """
     
     def __init__ (self, input_dim, output_dim, hidden_dim):
         super(Net, self).__init__()
