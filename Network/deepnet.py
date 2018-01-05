@@ -23,12 +23,12 @@ class Net(nn.Module):
         x = self.tanh(self.input_layer(x))
         #x = x = self.bn(x)
         
-        x = self.tanh(self.hidden_layer_1(x))
-        x = self.tanh(self.hidden_layer_2(x))
-        x = self.tanh(self.hidden_layer_3(x))
-        x = self.tanh(self.hidden_layer_4(x))
-        x = self.tanh(self.hidden_layer_5(x))
+        x = self.tanh(self.hidden_layer_1(x))  # hidden 1
+        x = self.tanh(self.hidden_layer_2(x))  # hidden 2
+        x = self.tanh(self.hidden_layer_3(x))  # hidden 3
+        x = self.tanh(self.hidden_layer_4(x))  # hidden 4
+        x = self.tanh(self.hidden_layer_5(x))  # hidden 5
         
-        x = self.output_layer(x)
+        x = self.output_layer(x)   # output
         return x
         
