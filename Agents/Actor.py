@@ -7,12 +7,11 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 
-from Network.CNN import CNN
 from Network.deepnetsoftmax import Netsoftmax
 from config import ConfigA
 
 
- class Actor(object):
+class Actor(object):
     """Policy Gradient Learning algorithm.
     
        Action based method: network estimate the probability of each action P(a),
@@ -37,33 +36,30 @@ from config import ConfigA
 
     
     def choose_action(self, observation):
-    ## Choose a from s
-    ## Return the action picked  
         observation = Variable(torch.from_numpy(observation), \
                            volatile=True).float().view(1, configA["inputs_dim"])
-        prob_weights = self.q(observation)  # train
+        prob_weights = self.q(observation)       # train
         
         print "(pick)Actor: act prob"
         print prob_weights
         
-        # Pick action using the probability predicted
         prob_weights = prob_weights.data.numpy()
-        action = np.random.choice(range(prob_weights.shape[1]), p=prob_weights.ravel()) 
+        action = np.random.choice(range(prob_weights.shape[1]), p=prob_weights.ravel()) # pick action 
         
         return action 
     
   
     def learn(self, s, a, td):
-        if len(s.shape)==1: 
-            s, a = s[np.newaxis, :], np.array([[a]])    # (N, x)
+        if len(s.shape)==1: s, a = s[np.newaxis, :], np.array([[a]])    # (N, x)
           
         # Model predict action probability  
         self.optimizer.zero_grad()
         acts_prob = self.q(Variable(torch.from_numpy(np.asarray(s))).float())        # shape (N, 4)
         
-        # Compute Loss
-        log_prob = torch.log(torch.cat([acts_prob[i,a[i][0]] for i in range(a.shape[0])],0))                 # log 动作概率    shape (N, )         
-        loss = -torch.mean(torch.cat([torch.mul(log_prob[i], float(td[i][0])) for i in range(td.shape[0])],0))       # log 概率 * TD 方向    shape (1, )
+        # Compute Loss -log probability * td-error
+        log_prob = torch.log(torch.cat([acts_prob[i,a[i][0]] for i in range(a.shape[0])],0))          
+        loss = -torch.mean(torch.cat([torch.mul(log_prob[i], \
+                           float(td[i][0])) for i in range(td.shape[0])],0))      
                   
         print "Actor: log prob * vt"
         print -loss 
@@ -75,7 +71,8 @@ from config import ConfigA
         loss =  loss.data.numpy()[0] 
         self._loss_.append(-loss)
         return -loss
-                
+        
+        
     def plot():
         return
         

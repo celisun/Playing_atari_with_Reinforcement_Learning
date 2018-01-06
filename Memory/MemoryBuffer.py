@@ -1,6 +1,13 @@
 # a simple replay memory for experience replay, 
 # can save transitions and sample a random batch of transitions 
 # out of memory
+import random
+from collections import namedtuple
+
+
+# named tuple representing a single transition in enviornment
+Transition = namedtuple('Transition',
+                        ('state', 'action', 'reward', 'next_state'))
 
 class ReplayMemory(object):
     def __init__(self, capacity):
