@@ -1,8 +1,11 @@
-# Byte-compiled / optimized / DLL files
-
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
 *~
 .DS_Store
+.ipynb_checkpoints
+__init__.py
+-checkpoint.ipynb
+ACER-p -checkpoint.ipynb
+cache
