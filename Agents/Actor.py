@@ -8,7 +8,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 
 from Network.deepnetsoftmax import Netsoftmax
-from config import ConfigA
+from config.configA import configA
 
 
 class Actor(object):
@@ -28,7 +28,7 @@ class Actor(object):
        
         self.optimizer = optim.Adam(self.q.parameters(), lr=configA["learning_rate"], \
                                         betas=configA["betas"], \
-                                        weight_decay=configA["weight_decay"] if configA["weight_decay"] else None)
+                        weight_decay=configA["weight_decay"] if configA["weight_decay"] else None)
         self.ep_obs=[]
         self.ep_as=[]
         self.ep_rs=[]
@@ -37,14 +37,16 @@ class Actor(object):
     
     def choose_action(self, observation):
         observation = Variable(torch.from_numpy(observation), \
-                           volatile=True).float().view(1, configA["inputs_dim"])
+                     volatile=True).float().view(1, configA["inputs_dim"])
+        
         prob_weights = self.q(observation)       # train
         
         print "(pick)Actor: act prob"
         print prob_weights
         
+        # pick action 
         prob_weights = prob_weights.data.numpy()
-        action = np.random.choice(range(prob_weights.shape[1]), p=prob_weights.ravel()) # pick action 
+        action = np.random.choice(range(prob_weights.shape[1]), p=prob_weights.ravel()) 
         
         return action 
     
@@ -54,7 +56,7 @@ class Actor(object):
           
         # Model predict action probability  
         self.optimizer.zero_grad()
-        acts_prob = self.q(Variable(torch.from_numpy(np.asarray(s))).float())        # shape (N, 4)
+        acts_prob = self.q(Variable(torch.from_numpy(np.asarray(s))).float())  # shape (N, 4)
         
         # Compute Loss -log probability * td-error
         log_prob = torch.log(torch.cat([acts_prob[i,a[i][0]] for i in range(a.shape[0])],0))          

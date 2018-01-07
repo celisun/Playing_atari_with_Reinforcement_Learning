@@ -8,7 +8,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 
 from Network.deepnet import Net
-from config import ConfigC
+from config.configC import configC
 
 
 class Critic(object):
