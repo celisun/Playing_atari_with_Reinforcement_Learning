@@ -23,7 +23,7 @@ class Critic(object):
         self._loss_=[]
         
         
-    def learn(self, s, r, s_):  
+    def learn(self, s, r, s_, ISWeights=None):  
         if len(s.shape)==1: 
             s, s_, r = s_[np.newaxis, :], s_[np.newaxis, :], np.array([[r]]) 
         
@@ -44,9 +44,18 @@ class Critic(object):
         expected_state_values = torch.cat([torch.add((next_state_values[i] * configC["GAMMA"]), \
                             r[i][0]) for i in range(r.shape[0])],0).view(s.size()[0], 1)     
         
-        # Copmute TD error and loss
-        td_error = expected_state_values.sub(state_values)                        # shape=(N, 1)
-        loss = torch.mean((expected_state_values.sub(state_values))**2)           # shape=(1,  )
+        # Copmute td error and loss
+        td_error = expected_state_values.sub(state_values) # calculate td error       #shape=(N, 1)
+        abs_error = torch.mean(torch.abs(td_error))   # calculate transition priority
+        
+        if ISWeights == None:
+            loss = torch.mean((expected_state_values.sub(state_values))**2)       
+        else: 
+            ISWeights = Variable(torch.from_numpy(ISWeights)).float()
+            loss = torch.mean(torch.mul((expected_state_values.sub(state_values))**2, ISWeights))
+        
+        print "Critic: td-error"
+        print td_error
 
         # Update model
         loss.backward()
@@ -54,9 +63,10 @@ class Critic(object):
     
         # Append loss to array
         self._loss_.append(torch.mean(td_error).data.numpy()[0])
-     
         td_error = td_error.data.numpy()    
-        return td_error    
+        abs_error = abs_error.data.numpy()  
+        
+        return td_error, abs_error
     
     
     

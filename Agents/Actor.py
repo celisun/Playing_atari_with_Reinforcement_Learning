@@ -63,7 +63,7 @@ class Actor(object):
         loss = -torch.mean(torch.cat([torch.mul(log_prob[i], \
                            float(td[i][0])) for i in range(td.shape[0])],0))      
                   
-        print "Actor: log prob * vt"
+        print "Actor: log prob * vt (loss)"
         print -loss 
         
         # Update Model 
