@@ -8,7 +8,6 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-
 from Actor import Actor
 from Critic import Critic
 from SumTreeMemoryBuffer import SumTreeMemoryBuffer
@@ -55,7 +54,6 @@ def start_p(GAME_NAME, BATCH_SIZE=32, MEMORY_CAPACITY=50000):
             if RENDER: env.render()
 
             a = actor.choose_action(s)
-
             s_, r, done, info = env.step(a)
 
             if done: r = -20    #  Penalty if die
@@ -75,7 +73,7 @@ def start_p(GAME_NAME, BATCH_SIZE=32, MEMORY_CAPACITY=50000):
                 r_b = np.asarray(batch[-1,9])  # reward
 
                 td_error, abs_error = critic.learn(s_b, r_b, s_b_n, ISWeights) # Critic Learn
-                replay_memory.batch_update(tree_idx, abs_error)       # Update T priority
+                replay_memory.batch_update(tree_idx, abs_error)       # Update priority
                 actor.learn(s_b, a_b, td_error)                      # Actor Learn
 
             s = s_
@@ -84,7 +82,7 @@ def start_p(GAME_NAME, BATCH_SIZE=32, MEMORY_CAPACITY=50000):
             if is_ipython:
                 display.clear_output(wait=True)
                 display.display(plt.gcf())
-            #env.render()
+            #env.render() # display game window
 
             if done or t >= MAX_EP_STEPS:
                 ep_rs_sum = sum(track_r)/float(t)
@@ -101,21 +99,9 @@ def start_p(GAME_NAME, BATCH_SIZE=32, MEMORY_CAPACITY=50000):
                 #plot(reward_per_epi, durations_per_epi, l_A, l_C)
 
                 break
-
     return reward_per_epi, durations_per_epi, l_A, l_C
 
-
-
-def r_percent(r, t):
-    n=len(r)
-    c=0.
-    for i in r:
-        if i>=t:
-            c += 1
-    return c/n
-
-
-def plot(x,d,la,lc):
+def plot (x,d,la,lc):
     fig = plt.figure(figsize=(12,12))
     plt.clf()
     ax1 = fig.add_subplot(2,2,1)
@@ -140,15 +126,23 @@ def plot(x,d,la,lc):
     fig.savefig('acerp.png')
     print "training done and saved to acerp.png"
 
+def _r_percent_(r, t):  # calculate reward percentage
+    n=len(r)
+    c=0.
+    for i in r:
+        if i>=t:
+            c += 1
+    return c/n
+
 
 
 
 # ------ Train -----
 r3, d3, l_A3, l_C3 = start_p('LunarLander-v2', BATCH_SIZE=1, MEMORY_CAPACITY=5)
 plot(r3, d3, l_A3, l_C3)
-print "episode, r > 0: %.01f%s" % (float(r_percent(r3, 0)*100), "%")
-print "episode, r > -1: %.01f%s" % (float(r_percent (r3, -1)*100) , "%")
-print "episode, r > -2: %.01f%s" % (float(r_percent (r3, -2)*100) , "%")
+print "episode, r > 0: %.01f%s" % (float(_r_percent_(r3, 0)*100), "%")
+print "episode, r > -1: %.01f%s" % (float(_r_percent_(r3, -1)*100) , "%")
+print "episode, r > -2: %.01f%s" % (float(_r_percent_(r3, -2)*100) , "%")
 print "Highest score: %.02f" % max(r3)
 print "Highest total score: %.01f" % max([x*y for x, y in zip(r3, d3)])
 print "----"
