@@ -1,10 +1,10 @@
-# Playing Atari with Reinforcemen Learning
+# Playing Atari Game with Reinforcemen Learning
 
 
 
 Table comparing the average and total scores per episode by training on game LunarLanderv.2.0. using different learning algorithms
 
-<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/res/results_table.png width="450">
+<img src=https://raw.githubusercontent.com/celisun/2017-18Playing_Atari_with_Reinforcement_Learning/master/res/results_table.png width="460">
 
 Lunar Lander game 'LunarLander-v2'
 
